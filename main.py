@@ -1,4 +1,3 @@
-from audioop import add
 import sqlite3
 from tkinter import font, messagebox
 from tkinter import *
@@ -7,14 +6,13 @@ import tkinter.ttk as ttk
 from PIL import ImageTk, Image
 import customtkinter
 from customtkinter import *
-from pyparsing import col
-
+from matplotlib import image
 from app import System
 
 customtkinter.set_appearance_mode("system")
 
 
-class mainGUI(Tk):
+class mainGUI(CTk):
     def __init__(self):
         super().__init__()
         self.title("Canime Co. Management System | Login")
@@ -79,43 +77,46 @@ class mainGUI(Tk):
         window.title("Canime Co. | Sales Management Dashboard")
         window.config()
 
-        information_dashboard_frame = CTkFrame(window, height=100, width=1400, fg_color="#0c3d5c")
+        information_dashboard_frame = CTkFrame(window, height=100, width=1400, fg_color=("#209ce8","#0c3d5c"))
         information_dashboard_frame.place(x=0.1, y=0.1)
 
         image_label = Image.open("assets/logo3.png").resize((100, 100), Image.ANTIALIAS)
         resize_image = ImageTk.PhotoImage(image_label)
 
-        logo_label = Label(information_dashboard_frame, image=resize_image,relief=GROOVE, borderwidth=0, bg="#0c3d5c")
+        logo_label = CTkLabel(information_dashboard_frame, image=resize_image,relief=GROOVE, borderwidth=0, bg="#0c3d5c")
         logo_label.place(x=0.1, y=0.1)
 
-        company_label = Label(information_dashboard_frame, text="Canime Co. | Sales Management Dashboard", font=("Gluten", 30), bg="#0c3d5c")
+        company_label = CTkLabel(information_dashboard_frame, text="Canime Co. | Sales Management Dashboard", text_font=("Gluten", 30), bg_color="#0c3d5c", text_color=('#000000', '#faf7f7'))
         company_label.place(x=200, y=25)
 
         #Frame for sidebar_information
-        side_information_frame = Frame(window, height=500, width=300, bg='#293462')
+        side_information_frame = Frame(window, height=500, width=300)
         side_information_frame.place(x=0.1, y=100)
         
         #for image or logo of the salesman
-        self.canvas = CTkCanvas(side_information_frame, height=150, width=200, bg='blue')
-        self.canvas.place(x=50, y=10)
+        self.canvas = CTkCanvas(window, height=150, width=200, bg='blue')
+        self.canvas.place(x=40, y=100)
 
-        self.salesman_number_label = CTkLabel(side_information_frame, text_font="Roboto 20", text="")
-        self.salesman_number_label.place(x=90, y=170)
 
-        self.salesman_name_label = CTkLabel(side_information_frame, text_font="Roboto 20", text="")
-        self.salesman_name_label.place(x=90, y=200)
+        self.salesman_number_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_number_Entry.place(x=40, y=170)
 
-        self.salesman_gender_label = CTkLabel(side_information_frame, text_font="Roboto 20", text="")
-        self.salesman_gender_label.place(x=90, y=230)
+        self.salesman_name_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_name_Entry.place(x=40, y=220)
+        
+        self.salesman_gender_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_gender_Entry.place(x=40, y=270)
 
-        self.salesman_age_label = CTkLabel(side_information_frame, text_font="Roboto 20", text="")
-        self.salesman_age_label.place(x=90, y=260)
+        self.salesman_age_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_age_Entry.place(x=40, y=320)
 
-        self.salesman_address_label = CTkLabel(side_information_frame, text_font="Roboto 20", text="")
-        self.salesman_address_label.place(x=90, y=300)
+        self.salesman_address_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_address_Entry.place(x=40, y=370)
+
+        
 
         #Frame for treeview_information
-        treeview_information_frame = Frame(window, height=400, width=1100, bg='#354259')
+        treeview_information_frame = Frame(window, height=400, width=1100)
         treeview_information_frame.place(x=300, y=100)
 
         self.treeview_column = ('1', '2', '3', '4', '5')
@@ -137,7 +138,7 @@ class mainGUI(Tk):
         self.treeview.bind("<Double-Button-1>", self.showValue)
         
         #Frame for buttons
-        button_information_frame = Frame(window, height=100, width=1100, bg='#363062')
+        button_information_frame = Frame(window, height=100, width=1100)
         button_information_frame.place(x=300, y=500)
 
 
@@ -148,7 +149,7 @@ class mainGUI(Tk):
         edit_photo = ImageTk.PhotoImage(Image.open("assets/icon/settings.png").resize((image_size, image_size)))
         delete_photo = ImageTk.PhotoImage(Image.open("assets/icon/bell.png").resize((image_size, image_size)))
 
-        add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=None, fg_color="#4B8673", hover_color="#5FD068")
+        add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=self.create_salesman, fg_color="#4B8673", hover_color="#5FD068")
         add_button.place(x=50, y=30)
 
         edit_button = CTkButton(button_information_frame, width=200, height=60, text="Edit", image=edit_photo, compound="left", command=None, fg_color="#47B5FF", hover_color="#1363DF")
@@ -162,7 +163,6 @@ class mainGUI(Tk):
 
         window.mainloop()
     
-    
 
     #show data in the side_information_frame
 
@@ -174,16 +174,36 @@ class mainGUI(Tk):
         selecteditem = content['values']
 
         self.salesman_number = selecteditem[0]
-        print(self.salesman_number)
+        #print(self.salesman_number)
 
         row_id = self.treeview.selection()[0]
         self.setlist = self.treeview.set(row_id)
 
-        self.salesman_number_label['text'] = self.setlist['1']
-        self.salesman_name_label['text'] = self.setlist['2']
-        self.salesman_gender_label['text'] = self.setlist['3']
-        self.salesman_age_label['text'] = self.setlist['4']
-        self.salesman_address_label['text'] = self.setlist['5']
+        self.salesman_number_Entry.config(state="normal")
+        self.salesman_name_Entry.config(state="normal")
+        self.salesman_gender_Entry.config(state="normal")
+        self.salesman_age_Entry.config(state="normal")
+        self.salesman_address_Entry.config(state="normal")
+
+
+        self.salesman_number_Entry.delete(0, END)
+        self.salesman_name_Entry.delete(0, END)
+        self.salesman_gender_Entry.delete(0, END)
+        self.salesman_age_Entry.delete(0, END)
+        self.salesman_address_Entry.delete(0, END)
+
+        self.salesman_number_Entry.insert(0, self.setlist['1'])
+        self.salesman_name_Entry.insert(0, self.setlist['2'])
+        self.salesman_gender_Entry.insert(0, self.setlist['3'])
+        self.salesman_age_Entry.insert(0, self.setlist['4'])
+        self.salesman_address_Entry.insert(0, self.setlist['5'])
+
+        self.salesman_number_Entry.config(state="disabled")
+        self.salesman_name_Entry.config(state="disabled")
+        self.salesman_gender_Entry.config(state="disabled")
+        self.salesman_age_Entry.config(state="disabled")
+        self.salesman_address_Entry.config(state="disabled")
+
 
     #display data
     def display_salesman_information(self, listbox):
@@ -198,5 +218,33 @@ class mainGUI(Tk):
         for row in rows:
             listbox.insert('', 'end', values=(row[1], row[2],row[3],row[4],row[5]))
 
+
+    def create_salesman(self):
+        create_window = Toplevel()
+        create_window.title("Canime Co. | Edit Salesman Information")
+        create_window.geometry("400x600")
+
+        #Frame for widgets
+        self.sales_information_create_frame = CTkFrame(create_window, height=500, width=300, fg_color="#B7CADB")
+        self.sales_information_create_frame.place(x=60)
+
+        self.create_label = CTkLabel(self.sales_information_create_frame, text="Create Salesman", text_font="Gluten 20")
+        self.create_label.grid(row=1, column=1, padx=10, pady=50)
+
+        self.create_label_name = CTkLabel(self.sales_information_create_frame, text="Salesman Name: ", text_font="Gluten 20")
+        self.create_label_name.grid(row=2, column=1)
+
+        self.create_Entry_name = CTkEntry(self.sales_information_create_frame, text_font="Gluten 20")
+        self.create_Entry_name.grid(row=2, column=2)
+
+
+
+        create_window.mainloop()
+
+    def edit_information(self):
+        window = Toplevel()
+        window.title("Canime Co. | Edit Salesman Information")
+        window.geometry("400x600")
+
 app = mainGUI()
-app.salesman_gui()
+app.create_salesman()
