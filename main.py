@@ -9,6 +9,8 @@ from customtkinter import *
 from matplotlib import image
 from app import System
 
+from ttkwidgets.autocomplete import AutocompleteEntry
+
 customtkinter.set_appearance_mode("system")
 
 
@@ -78,6 +80,18 @@ class mainGUI(CTk):
         window.title("Canime Co. | Sales Management Dashboard")
         window.config()
 
+        #self.system = None
+
+        #VARIABLES
+        self.SALESMAN_NUMBER = IntVar()
+        self.SALESMAN_NAME = StringVar()
+        self.SALESMAN_GENDER = StringVar()
+        self.SALESMAN_AGE = IntVar()
+        self.SALESMAN_ADDRESS = StringVar()
+        
+        self.system = System(self.SALESMAN_NUMBER.get(), self.SALESMAN_NAME.get(), self.SALESMAN_GENDER.get(), self.SALESMAN_AGE.get(), self.SALESMAN_ADDRESS.get())
+
+
         information_dashboard_frame = CTkFrame(window, height=100, width=1400, fg_color=("#209ce8","#0c3d5c"))
         information_dashboard_frame.place(x=0.1, y=0.1)
 
@@ -99,19 +113,19 @@ class mainGUI(CTk):
         self.canvas.place(x=40, y=100)
 
 
-        self.salesman_number_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_number_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NUMBER)
         self.salesman_number_Entry.place(x=40, y=170)
 
-        self.salesman_name_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_name_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NAME)
         self.salesman_name_Entry.place(x=40, y=220)
         
-        self.salesman_gender_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_gender_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_GENDER)
         self.salesman_gender_Entry.place(x=40, y=270)
 
-        self.salesman_age_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_age_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_AGE)
         self.salesman_age_Entry.place(x=40, y=320)
 
-        self.salesman_address_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled")
+        self.salesman_address_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_ADDRESS)
         self.salesman_address_Entry.place(x=40, y=370)
 
         
@@ -153,10 +167,10 @@ class mainGUI(CTk):
         add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=self.create_salesman, fg_color="#4B8673", hover_color="#5FD068")
         add_button.place(x=50, y=30)
 
-        edit_button = CTkButton(button_information_frame, width=200, height=60, text="Edit", image=edit_photo, compound="left", command=None, fg_color="#47B5FF", hover_color="#1363DF")
+        edit_button = CTkButton(button_information_frame, width=200, height=60, text="Edit", image=edit_photo, compound="left", command=self.edit_information, fg_color="#47B5FF", hover_color="#1363DF")
         edit_button.place(x=300, y=30)
 
-        delete_button = CTkButton(button_information_frame, width=200, height=60, text="Delete", image=delete_photo, compound="left", command=None, fg_color="#D82148", hover_color="#FF1818")
+        delete_button = CTkButton(button_information_frame, width=200, height=60, text="Delete", image=delete_photo, compound="left", command=self.delete_information, fg_color="#D82148", hover_color="#FF1818")
         delete_button.place(x=550, y=30)
 
 
@@ -193,11 +207,21 @@ class mainGUI(CTk):
         self.salesman_age_Entry.delete(0, END)
         self.salesman_address_Entry.delete(0, END)
 
+        #self.edit_entry_name.delete(0, END)
+        #self.edit_entry_number.delete(0, END)
+        #self.edit_entry_age.delete(0, END)
+        #self.edit_entry_address.delete(0, END)
+
         self.salesman_number_Entry.insert(0, self.setlist['1'])
         self.salesman_name_Entry.insert(0, self.setlist['2'])
         self.salesman_gender_Entry.insert(0, self.setlist['3'])
         self.salesman_age_Entry.insert(0, self.setlist['4'])
         self.salesman_address_Entry.insert(0, self.setlist['5'])
+
+        #self.edit_entry_name.insert(0, self.setlist['2'])
+        #self.edit_entry_number.insert(0, self.setlist['1'])
+        #self.edit_entry_age.insert(0, self.setlist['4'])
+        #self.edit_entry_address.insert(0, self.setlist['5'])
 
         self.salesman_number_Entry.config(state="disabled")
         self.salesman_name_Entry.config(state="disabled")
@@ -214,9 +238,11 @@ class mainGUI(CTk):
 
         cursor.execute("SELECT * FROM salesman ORDER BY salesman_no ASC")
 
-        rows = cursor.fetchall()
+        self.rows = cursor.fetchall()
 
-        for row in rows:
+        #self.data = []
+
+        for row in self.rows:
             listbox.insert('', 'end', values=(row[1], row[2],row[3],row[4],row[5]))
 
 
@@ -239,8 +265,9 @@ class mainGUI(CTk):
             if self.system:
                 messagebox.showinfo(title="Canime Co. | Successfully Create Salesman", message="Successfully Created")
                 create_window.destroy()
+                self.display_salesman_information(self.treeview)
             else:
-                messagebox.showerror(title="Canime Co. | Successfully Create Salesman", message="Please Try Again")
+                messagebox.showerror(title="Canime Co. | Failed Create Salesman", message="Please Try Again")
 
 
         #Frame for widgets
@@ -297,9 +324,108 @@ class mainGUI(CTk):
         create_window.mainloop()
 
     def edit_information(self):
-        window = Toplevel()
-        window.title("Canime Co. | Edit Salesman Information")
-        window.geometry("400x600")
+        create_window = CTkToplevel()
+        create_window.title("Canime Co. | Edit Salesman Information")
+        create_window.geometry("550x500")
+
+        #VARIABLE
+        SALESMAN_NUMBER = IntVar()
+        SALESMAN_NAME = StringVar()
+        SALESMAN_GENDER = StringVar()
+        SALESMAN_AGE = IntVar()
+        SALESMAN_ADDRESS = StringVar()
+            
+
+        def edit():
+            system = System(self.SALESMAN_NUMBER, self.SALESMAN_NAME, self.SALESMAN_GENDER, self.SALESMAN_AGE, self.SALESMAN_ADDRESS)
+            if system:
+                messagebox.showinfo(message="Coanime Co. | Successfully Update", title="Success Update")
+                self.display_salesman_information(self.treeview)
+                create_window.destroy()
+            else:
+                messagebox.showerror(message="Coanime Co. | Failed", title="Please Try Again")
+
+        #Frame for widgets
+        self.sales_information_edit_frame = CTkFrame(create_window, height=500, width=300)
+        self.sales_information_edit_frame.place(x=60)
+
+        self.edit_label = CTkLabel(self.sales_information_edit_frame, text="Edit Salesman", text_font="Gluten 20")
+        self.edit_label.grid(row=1, column=1, padx=10, pady=50)
+
+        self.edit_label_number = CTkLabel(self.sales_information_edit_frame, text="Salesman Number: ", text_font="Gluten 20")
+        self.edit_label_number.grid(row=2, column=1)
+
+        self.edit_entry_number = CTkEntry(self.sales_information_edit_frame, text_font="Roboto 15", width=200, textvariable=self.SALESMAN_NUMBER)
+        self.edit_entry_number.grid(row=2, column=2)
+
+        self.edit_label_name = CTkLabel(self.sales_information_edit_frame, text="Salesman Name: ", text_font="Roboto 15")
+        self.edit_label_name.grid(row=3, column=1)
+
+        self.edit_entry_name = CTkEntry(self.sales_information_edit_frame, text_font="Roboto 15", width=200, textvariable=self.SALESMAN_NAME)
+        self.edit_entry_name.grid(row=3, column=2)
+
+        self.edit_label_age = CTkLabel(self.sales_information_edit_frame, text="Salesman Age: ", text_font="Roboto 15")
+        self.edit_label_age.grid(row=4, column=1)
+
+        self.edit_entry_age = CTkEntry(self.sales_information_edit_frame, text_font="Roboto 15", width=200, textvariable=self.SALESMAN_AGE)
+        self.edit_entry_age.grid(row=4, column=2)
+
+        self.edit_label_gender = CTkLabel(self.sales_information_edit_frame, text="Salesman Gender: ", text_font="Roboto 15")
+        self.edit_label_gender.grid(row=5, column=1)
+
+        self.edit_option_gender = CTkRadioButton(self.sales_information_edit_frame, text="Male", value="Male")
+        self.edit_option_gender.grid(row=5, column=2)
+
+        self.edit_option_gender = CTkRadioButton(self.sales_information_edit_frame, text="Female", value="Female", textvariable=self.SALESMAN_GENDER)
+        self.edit_option_gender.grid(row=5, column=3)
+
+        self.edit_label_address = CTkLabel(self.sales_information_edit_frame, text="Salesman Address: ", text_font="Roboto 15")
+        self.edit_label_address.grid(row=6, column=1)
+
+        self.edit_entry_address = CTkEntry(self.sales_information_edit_frame, text_font="Roboto 15", width=200, textvariable=self.SALESMAN_ADDRESS)
+        self.edit_entry_address.grid(row=6, column=2)
+
+        image_size = 20
+        add_photo = ImageTk.PhotoImage(Image.open("assets/icon/add-user.png").resize((image_size, image_size)))
+        delete_photo = ImageTk.PhotoImage(Image.open("assets/icon/icons/cross-circle.png").resize((image_size, image_size)))
+
+        add_button = CTkButton(create_window, width=200, height=60, text="Add", image=add_photo, compound="left", command=edit, fg_color="#4B8673", hover_color="#5FD068")
+        add_button.place(x=50, y=300)
+
+
+        delete_button = CTkButton(create_window, width=200, height=60, text="Cancel", image=delete_photo, compound="left", command=create_window.destroy, fg_color="#D82148", hover_color="#FF1818")
+        delete_button.place(x=300, y=300)
+
+        create_window.mainloop()
+
+    def delete_information(self):
+        #print(self.SALESMAN_NUMBER.get())
+        delete = System.delete_salesman(self.SALESMAN_NUMBER.get())
+        if delete:
+            messagebox.showinfo(message="Canime Co. | Success", title="Canime Co. | The Salesman has been deleted")
+            self.salesman_number_Entry.config(state="normal")
+            self.salesman_name_Entry.config(state="normal")
+            self.salesman_gender_Entry.config(state="normal")
+            self.salesman_age_Entry.config(state="normal")
+            self.salesman_address_Entry.config(state="normal")
+
+            self.salesman_number_Entry.delete(0, END)
+            self.salesman_name_Entry.delete(0, END)
+            self.salesman_gender_Entry.delete(0, END)
+            self.salesman_age_Entry.delete(0, END)
+            self.salesman_address_Entry.delete(0, END)
+            self.display_salesman_information(self.treeview)
+            
+            self.salesman_number_Entry.config(state="disabled")
+            self.salesman_name_Entry.config(state="disabled")
+            self.salesman_gender_Entry.config(state="disabled")
+            self.salesman_age_Entry.config(state="disabled")
+            self.salesman_address_Entry.config(state="disabled")
+
+        else:
+            messagebox.showerror(message="Canime Co. | Failed", title="Canime Co. | Please Try Again")
+        
+        
 
 app = mainGUI()
-app.create_salesman()
+app.mainloop()

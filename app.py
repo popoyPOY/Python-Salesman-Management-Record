@@ -30,17 +30,20 @@ class System:
             return True
         
         #self.database.close()
-    
-    def delete_salesman(self):
-        sql = "DELETE from salesman where salesman_no = ?"
+    @staticmethod
+    def delete_salesman(salesman):
 
-        value = (self.salesman_number,)
+        database = sqlite3.connect("SalesFile.db")
 
-        self.database.execute(sql, value)
+        sql = "DELETE from salesman where salesman_number = ?"
 
-        self.database.commit()
+        value = (salesman,)
 
-        self.database.close()
+        database.execute(sql, value)
+
+        database.commit()
+
+        #self.database.close()
         return True
 
     #This will diplay raw data from the database
@@ -54,22 +57,23 @@ class System:
 
         return rows
 
-    def update_salesman(self, new_name):
-        self.new_name = new_name
-        sql2 = """UPDATE sales SET salesman_name = ? where salesman_name = ?"""
-        value2 = (self.new_name, self.salesman_name,)
+    def update_salesman(self):
+        #self.new_name = new_name
+        #sql2 = """UPDATE sales SET salesman_name = ? where salesman_name = ?"""
+        #value2 = (self.new_name, self.salesman_name,)
 
-        self.database.execute(sql2, value2)       
+        #self.database.execute(sql2, value2)       
         
         sql = """UPDATE  salesman SET salesman_name = ?, salesman_gender = ?,
                          salesman_age = ?, salesman_address = ? where salesman_number = ?"""
 
-        value = (self.new_name, self.salesman_gender, self.salesman_age, self.salesman_address, self.salesman_number)
+        value = (self.salesman_name, self.salesman_gender, self.salesman_age, self.salesman_address, self.salesman_number)
 
         self.database.execute(sql, value)
 
         self.database.commit()
 
+        return True
         #Sales_system sales table updating the salesman_name
 
 
