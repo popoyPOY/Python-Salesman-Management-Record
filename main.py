@@ -24,6 +24,7 @@ class mainGUI(CTk):
         self.height = self.winfo_height()
         
         self.resizable(False, False)
+        #self.system = System()
 
         #Frame1-------------
         self.background_image = Image.open("assets/background.jpg")
@@ -70,7 +71,7 @@ class mainGUI(CTk):
     
 
     def salesman_gui(self):
-        window = Toplevel()
+        window = CTkToplevel()
         
         window.resizable(0,0)
         window.geometry("1400x600")
@@ -220,24 +221,78 @@ class mainGUI(CTk):
 
 
     def create_salesman(self):
-        create_window = Toplevel()
+        create_window = CTkToplevel()
         create_window.title("Canime Co. | Edit Salesman Information")
-        create_window.geometry("400x600")
+        create_window.geometry("550x500")
+
+        #VARIABLE
+        SALESMAN_NUMBER = IntVar()
+        SALESMAN_NAME = StringVar()
+        SALESMAN_GENDER = StringVar()
+        SALESMAN_AGE = IntVar()
+        SALESMAN_ADDRESS = StringVar()
+
+
+        def create():
+            self.system = System(salesman_number=SALESMAN_NUMBER.get(), salesman_name=SALESMAN_NAME.get(), salesman_gender=SALESMAN_GENDER.get(),
+                             salesman_age=SALESMAN_AGE.get(), salesman_address=SALESMAN_ADDRESS.get()).create_salesman()
+            if self.system:
+                messagebox.showinfo(title="Canime Co. | Successfully Create Salesman", message="Successfully Created")
+                create_window.destroy()
+            else:
+                messagebox.showerror(title="Canime Co. | Successfully Create Salesman", message="Please Try Again")
+
 
         #Frame for widgets
-        self.sales_information_create_frame = CTkFrame(create_window, height=500, width=300, fg_color="#B7CADB")
+        self.sales_information_create_frame = CTkFrame(create_window, height=500, width=300)
         self.sales_information_create_frame.place(x=60)
 
         self.create_label = CTkLabel(self.sales_information_create_frame, text="Create Salesman", text_font="Gluten 20")
         self.create_label.grid(row=1, column=1, padx=10, pady=50)
 
-        self.create_label_name = CTkLabel(self.sales_information_create_frame, text="Salesman Name: ", text_font="Gluten 20")
-        self.create_label_name.grid(row=2, column=1)
+        self.create_label_number = CTkLabel(self.sales_information_create_frame, text="Salesman Number: ", text_font="Roboto 15")
+        self.create_label_number.grid(row=2, column=1)
 
-        self.create_Entry_name = CTkEntry(self.sales_information_create_frame, text_font="Gluten 20")
-        self.create_Entry_name.grid(row=2, column=2)
+        self.create_entry_number = CTkEntry(self.sales_information_create_frame, text_font="Roboto 15", width=200, textvariable=SALESMAN_NUMBER)
+        self.create_entry_number.grid(row=2, column=2)
+
+        self.create_label_name = CTkLabel(self.sales_information_create_frame, text="Salesman Name: ", text_font="Roboto 15")
+        self.create_label_name.grid(row=3, column=1)
+
+        self.create_entry_name = CTkEntry(self.sales_information_create_frame, text_font="Roboto 15", width=200, textvariable=SALESMAN_NAME)
+        self.create_entry_name.grid(row=3, column=2)
+
+        self.create_label_age = CTkLabel(self.sales_information_create_frame, text="Salesman Age: ", text_font="Roboto 15")
+        self.create_label_age.grid(row=4, column=1)
+
+        self.create_entry_age = CTkEntry(self.sales_information_create_frame, text_font="Roboto 15", width=200, textvariable=SALESMAN_AGE)
+        self.create_entry_age.grid(row=4, column=2)
+
+        self.create_label_gender = CTkLabel(self.sales_information_create_frame, text="Salesman Gender: ", text_font="Roboto 15")
+        self.create_label_gender.grid(row=5, column=1)
+
+        self.create_option_gender = CTkRadioButton(self.sales_information_create_frame, text="Male", value="Male", variable=SALESMAN_GENDER)
+        self.create_option_gender.grid(row=5, column=2)
+
+        self.create_option_gender = CTkRadioButton(self.sales_information_create_frame, text="Female", value="Female", variable=SALESMAN_GENDER)
+        self.create_option_gender.grid(row=5, column=3)
+
+        self.create_label_address = CTkLabel(self.sales_information_create_frame, text="Salesman Address: ", text_font="Roboto 15")
+        self.create_label_address.grid(row=6, column=1)
+
+        self.create_entry_address = CTkEntry(self.sales_information_create_frame, text_font="Roboto 15", width=200, textvariable=SALESMAN_ADDRESS)
+        self.create_entry_address.grid(row=6, column=2)
+
+        image_size = 20
+        add_photo = ImageTk.PhotoImage(Image.open("assets/icon/add-user.png").resize((image_size, image_size)))
+        delete_photo = ImageTk.PhotoImage(Image.open("assets/icon/icons/cross-circle.png").resize((image_size, image_size)))
+
+        add_button = CTkButton(create_window, width=200, height=60, text="Add", image=add_photo, compound="left", command=create, fg_color="#4B8673", hover_color="#5FD068")
+        add_button.place(x=50, y=300)
 
 
+        delete_button = CTkButton(create_window, width=200, height=60, text="Cancel", image=delete_photo, compound="left", command=create_window.destroy, fg_color="#D82148", hover_color="#FF1818")
+        delete_button.place(x=300, y=300)
 
         create_window.mainloop()
 
