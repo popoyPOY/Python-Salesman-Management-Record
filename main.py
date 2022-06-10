@@ -1,8 +1,10 @@
+from calendar import c
 import sqlite3
 from tkinter import font, messagebox
 from tkinter import *
 from tkinter.ttk import Treeview
 import tkinter.ttk as ttk
+from turtle import bgcolor
 from PIL import ImageTk, Image
 import customtkinter
 from customtkinter import *
@@ -64,6 +66,7 @@ class mainGUI(CTk):
     def Login(self):
         if self.username_entry.get() == "admin" and self.password_entry.get() == "admin":
             messagebox.showinfo(title="Canime Co. | Message", message="Canime Co. | Login Successful")
+            self.withdraw()
             self.salesman_gui()
         
         elif self.username_entry.get() == "" and self.password_entry.get() == "":
@@ -163,6 +166,8 @@ class mainGUI(CTk):
         add_photo = ImageTk.PhotoImage(Image.open("assets/icon/add-user.png").resize((image_size, image_size)))
         edit_photo = ImageTk.PhotoImage(Image.open("assets/icon/settings.png").resize((image_size, image_size)))
         delete_photo = ImageTk.PhotoImage(Image.open("assets/icon/bell.png").resize((image_size, image_size)))
+        sales_photo = ImageTk.PhotoImage(Image.open("assets/icon/shop.png").resize((image_size, image_size)))
+
 
         add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=self.create_salesman, fg_color="#4B8673", hover_color="#5FD068")
         add_button.place(x=50, y=30)
@@ -172,6 +177,9 @@ class mainGUI(CTk):
 
         delete_button = CTkButton(button_information_frame, width=200, height=60, text="Delete", image=delete_photo, compound="left", command=self.delete_information, fg_color="#D82148", hover_color="#FF1818")
         delete_button.place(x=550, y=30)
+
+        self.sales_button = CTkButton(button_information_frame, width=200, height=60, text="Sales", image=sales_photo, compound="left", command=self.sales_gui, fg_color="#9EB23B", hover_color="#C7D36F", state="disabled")
+        self.sales_button.place(x=800, y=30)
 
 
         self.display_salesman_information(self.treeview)
@@ -200,6 +208,7 @@ class mainGUI(CTk):
         self.salesman_age_Entry.config(state="normal")
         self.salesman_address_Entry.config(state="normal")
 
+        self.sales_button.config(state="disabled")
 
         self.salesman_number_Entry.delete(0, END)
         self.salesman_name_Entry.delete(0, END)
@@ -229,6 +238,7 @@ class mainGUI(CTk):
         self.salesman_age_Entry.config(state="disabled")
         self.salesman_address_Entry.config(state="disabled")
 
+        self.sales_button.config(state="normal")
 
     #display data
     def display_salesman_information(self, listbox):
@@ -356,7 +366,7 @@ class mainGUI(CTk):
         self.edit_label_number = CTkLabel(self.sales_information_edit_frame, text="Salesman Number: ", text_font="Gluten 20")
         self.edit_label_number.grid(row=2, column=1)
 
-        self.edit_entry_number = CTkEntry(self.sales_information_edit_frame, text_font="Roboto 15", width=200, textvariable=self.SALESMAN_NUMBER)
+        self.edit_entry_number = CTkEntry(self.sales_information_edit_frame, text_font="Roboto 15", width=200, textvariable=self.SALESMAN_NUMBER, state="disabled")
         self.edit_entry_number.grid(row=2, column=2)
 
         self.edit_label_name = CTkLabel(self.sales_information_edit_frame, text="Salesman Name: ", text_font="Roboto 15")
@@ -425,8 +435,145 @@ class mainGUI(CTk):
 
         else:
             messagebox.showerror(message="Canime Co. | Failed", title="Canime Co. | Please Try Again")
+
+
+
+#==============================BELOW THIS COE IS SALES UI AND FUNCTIONS ==============================#
+
+
+    def display_sales_information(self, listbox):
+        listbox.delete(*listbox.get_chilren())
         
+        cursor = sqlite3.connect("SalesFile.db").cursor()
+
+        cursor.execute("SELECT * FROM salesman_name  WHERE salesman_name = ? ORDER BY salesman_name")
+
+        self.row_sale = cursor.fetchall()
+
+        for row in self.row_sale:
+            listbox.insert('', 'end', values=(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]))
+    
+
+    def show_value_sales(self, event):
+        pass
+
+    def sales_gui(self):
+        window = Toplevel()
+        window.geometry("1400x800")
+        window.title(f"Coanime Co. | {self.setlist['2']} Sales Management Dashboard")
+
+        information_dashboard_frame = CTkFrame(window, height=100, width=1400, fg_color=("#5FD068","#4B8673"))
+        information_dashboard_frame.place(x=0.1, y=0.1)
+
+        image_label = Image.open("assets/logo3.png").resize((100, 100), Image.ANTIALIAS)
+        resize_image = ImageTk.PhotoImage(image_label)  
+
+        logo_label = CTkLabel(information_dashboard_frame, image=resize_image,relief=GROOVE, borderwidth=0, bg="#243A73")
+        logo_label.place(x=1300, y=0.1)
+
+        company_label = CTkLabel(information_dashboard_frame, text=f"Canime Co. | {self.setlist['2']} Sales Management Dashboard", text_font=("Gluten", 30), bg_color="#4B8673", text_color=('#000000', '#faf7f7'))
+        company_label.place(x=200, y=25)
+
+             #Frame for sidebar_information
+        side_information_frame = Frame(window, height=700, width=300)
+        side_information_frame.place(x=0.1, y=100)
         
+        #for image or logo of the salesman
+        self.canvas = CTkCanvas(window, height=150, width=200, bg='blue')
+        self.canvas.place(x=40, y=100)
+
+
+        self.salesman_number_entry2 = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NUMBER)
+        self.salesman_number_entry2.place(x=40, y=170)
+
+        self.salesman_name_entry2 = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NAME)
+        self.salesman_name_entry2.place(x=40, y=210)
+
+
+        self.sales_name_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_name_Entry.place(x=40, y=250)
+
+        self.sales_stock_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_stock_Entry.place(x=40, y=290)
+        
+        self.sales_quantity_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_quantity_entry.place(x=40, y=330)
+
+        self.sales_description_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_description_entry.place(x=40, y=370)
+
+        self.sales_unit_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_unit_entry.place(x=40, y=410)
+
+        self.sales_unit_price_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_unit_price_entry.place(x=40, y=450)
+
+        self.sales_unit_amount_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_unit_amount_entry.place(x=40, y=490)
+
+        self.sales_commission_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_commission_entry.place(x=40, y=530)
+
+        self.sales_net_amount_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_net_amount_entry.place(x=40, y=570)
+        
+
+        #Frame for treeview_information
+        treeview_information_frame = Frame(window, height=600, width=1100)
+        treeview_information_frame.place(x=300, y=100)
+
+        self.treeview_column = ('1', '2', '3', '4', '5', '6', '7', '8', '9')
+
+        self.treeview_sales = Treeview(treeview_information_frame, columns=self.treeview_column, show='headings', height=21)
+
+        self.treeview_sales.heading('1', text="Salesman Name")
+        self.treeview_sales.column("#1", width=120)
+        self.treeview_sales.heading('2', text="Salesman Stock")
+        self.treeview_sales.column("#2", width=120)
+        self.treeview_sales.heading('3', text="Salesman Quantity")
+        self.treeview_sales.column("#3", width=120)
+        self.treeview_sales.heading('4', text="Salesman Description")
+        self.treeview_sales.column("#4", width=120)
+        self.treeview_sales.heading('5', text="Salesman Unit")
+        self.treeview_sales.column("#5", width=120)
+        self.treeview_sales.heading('6', text="Salesman Selling Price")
+        self.treeview_sales.column("#6", width=120)
+        self.treeview_sales.heading('7', text="Amount")
+        self.treeview_sales.column("#7", width=120)
+        self.treeview_sales.heading('8', text="Commission")
+        self.treeview_sales.column("#8", width=120)
+        self.treeview_sales.heading('9', text="Net Amount")
+        self.treeview_sales.column("#9", width=120)
+
+        self.treeview_sales.grid()
+        self.treeview_sales.bind("<Double-Button-1>", self.show_value_sales)
+        
+        #Frame for buttons
+        button_information_frame = Frame(window, height=100, width=1100)
+        button_information_frame.place(x=300, y=500)
+
+
+        #Photo image icons
+        image_size = 20
+
+        add_photo = ImageTk.PhotoImage(Image.open("assets/icon/add-user.png").resize((image_size, image_size)))
+        edit_photo = ImageTk.PhotoImage(Image.open("assets/icon/settings.png").resize((image_size, image_size)))
+        delete_photo = ImageTk.PhotoImage(Image.open("assets/icon/bell.png").resize((image_size, image_size)))
+        sales_photo = ImageTk.PhotoImage(Image.open("assets/icon/shop.png").resize((image_size, image_size)))
+
+
+        add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=self.create_salesman, fg_color="#4B8673", hover_color="#5FD068")
+        add_button.place(x=50, y=30)
+
+        edit_button = CTkButton(button_information_frame, width=200, height=60, text="Edit", image=edit_photo, compound="left", command=self.edit_information, fg_color="#47B5FF", hover_color="#1363DF")
+        edit_button.place(x=300, y=30)
+
+        delete_button = CTkButton(button_information_frame, width=200, height=60, text="Delete", image=delete_photo, compound="left", command=self.delete_information, fg_color="#D82148", hover_color="#FF1818")
+        delete_button.place(x=550, y=30)
+
+
+        
+        window.mainloop()
 
 app = mainGUI()
 app.mainloop()
