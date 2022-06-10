@@ -56,7 +56,7 @@ class System:
         rows = cursor.fetchall()
 
         return rows
-
+    
     def update_salesman(self):
         #self.new_name = new_name
         #sql2 = """UPDATE sales SET salesman_name = ? where salesman_name = ?"""

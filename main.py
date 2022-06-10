@@ -337,8 +337,9 @@ class mainGUI(CTk):
             
 
         def edit():
-            system = System(self.SALESMAN_NUMBER, self.SALESMAN_NAME, self.SALESMAN_GENDER, self.SALESMAN_AGE, self.SALESMAN_ADDRESS)
+            system = System(self.setlist['1'], self.SALESMAN_NAME.get(), self.SALESMAN_GENDER.get(), self.SALESMAN_AGE.get(), self.SALESMAN_ADDRESS.get()).update_salesman()
             if system:
+                #update = System.update_salesman(self.SALESMAN_NAME, self.SALESMAN_GENDER, self.SALESMAN_AGE, self.SALESMAN_ADDRESS, self.setlist['1'])
                 messagebox.showinfo(message="Coanime Co. | Successfully Update", title="Success Update")
                 self.display_salesman_information(self.treeview)
                 create_window.destroy()
