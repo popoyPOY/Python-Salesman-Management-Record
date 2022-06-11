@@ -8,10 +8,8 @@ from turtle import bgcolor
 from PIL import ImageTk, Image
 import customtkinter
 from customtkinter import *
-from matplotlib import image
 from app import System
 
-from ttkwidgets.autocomplete import AutocompleteEntry
 
 customtkinter.set_appearance_mode("system")
 
@@ -26,7 +24,8 @@ class mainGUI(CTk):
         self.color = "#3C2C3E"
         self.width = self.winfo_screenwidth()
         self.height = self.winfo_height()
-        
+        photo = PhotoImage(file = "assets/logo3.png")
+        self.iconphoto(False, photo)
         self.resizable(False, False)
         #self.system = System()
 
@@ -82,6 +81,8 @@ class mainGUI(CTk):
         window.geometry("1400x600")
         window.title("Canime Co. | Sales Management Dashboard")
         window.config()
+        photo = PhotoImage(file = "assets/logo3.png")
+        window.iconphoto(False, photo)
 
         #self.system = None
 
@@ -108,27 +109,27 @@ class mainGUI(CTk):
         company_label.place(x=200, y=25)
 
         #Frame for sidebar_information
-        side_information_frame = Frame(window, height=500, width=300)
-        side_information_frame.place(x=0.1, y=100)
+        self.side_information_frame = Frame(window, height=500, width=300)
+        self.side_information_frame.place(x=0.1, y=100)
         
         #for image or logo of the salesman
         self.canvas = CTkCanvas(window, height=150, width=200, bg='blue')
         self.canvas.place(x=40, y=100)
 
 
-        self.salesman_number_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NUMBER)
+        self.salesman_number_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NUMBER)
         self.salesman_number_Entry.place(x=40, y=170)
 
-        self.salesman_name_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NAME)
+        self.salesman_name_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NAME)
         self.salesman_name_Entry.place(x=40, y=220)
         
-        self.salesman_gender_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_GENDER)
+        self.salesman_gender_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_GENDER)
         self.salesman_gender_Entry.place(x=40, y=270)
 
-        self.salesman_age_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_AGE)
+        self.salesman_age_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_AGE)
         self.salesman_age_Entry.place(x=40, y=320)
 
-        self.salesman_address_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_ADDRESS)
+        self.salesman_address_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_ADDRESS)
         self.salesman_address_Entry.place(x=40, y=370)
 
         
@@ -187,59 +188,61 @@ class mainGUI(CTk):
         window.mainloop()
     
 
-    #show data in the side_information_frame
+    #show data in the self.side_information_frame
 
     def showValue(self, event):
-        global salesman_number
+        try:
+            global salesman_number
 
-        treeview = self.treeview.focus()
-        content = (self.treeview.item(treeview))
-        selecteditem = content['values']
+            treeview = self.treeview.focus()
+            content = (self.treeview.item(treeview))
+            selecteditem = content['values']
 
-        self.salesman_number = selecteditem[0]
-        #print(self.salesman_number)
+            self.salesman_number = selecteditem[0]
+            #print(self.salesman_number)
 
-        row_id = self.treeview.selection()[0]
-        self.setlist = self.treeview.set(row_id)
+            row_id = self.treeview.selection()[0]
+            self.setlist = self.treeview.set(row_id)
 
-        self.salesman_number_Entry.config(state="normal")
-        self.salesman_name_Entry.config(state="normal")
-        self.salesman_gender_Entry.config(state="normal")
-        self.salesman_age_Entry.config(state="normal")
-        self.salesman_address_Entry.config(state="normal")
+            self.salesman_number_Entry.config(state="normal")
+            self.salesman_name_Entry.config(state="normal")
+            self.salesman_gender_Entry.config(state="normal")
+            self.salesman_age_Entry.config(state="normal")
+            self.salesman_address_Entry.config(state="normal")
 
-        self.sales_button.config(state="disabled")
+            self.sales_button.config(state="disabled")
 
-        self.salesman_number_Entry.delete(0, END)
-        self.salesman_name_Entry.delete(0, END)
-        self.salesman_gender_Entry.delete(0, END)
-        self.salesman_age_Entry.delete(0, END)
-        self.salesman_address_Entry.delete(0, END)
+            self.salesman_number_Entry.delete(0, END)
+            self.salesman_name_Entry.delete(0, END)
+            self.salesman_gender_Entry.delete(0, END)
+            self.salesman_age_Entry.delete(0, END)
+            self.salesman_address_Entry.delete(0, END)
 
-        #self.edit_entry_name.delete(0, END)
-        #self.edit_entry_number.delete(0, END)
-        #self.edit_entry_age.delete(0, END)
-        #self.edit_entry_address.delete(0, END)
+            #self.edit_entry_name.delete(0, END)
+            #self.edit_entry_number.delete(0, END)
+            #self.edit_entry_age.delete(0, END)
+            #self.edit_entry_address.delete(0, END)
 
-        self.salesman_number_Entry.insert(0, self.setlist['1'])
-        self.salesman_name_Entry.insert(0, self.setlist['2'])
-        self.salesman_gender_Entry.insert(0, self.setlist['3'])
-        self.salesman_age_Entry.insert(0, self.setlist['4'])
-        self.salesman_address_Entry.insert(0, self.setlist['5'])
+            self.salesman_number_Entry.insert(0, self.setlist['1'])
+            self.salesman_name_Entry.insert(0, self.setlist['2'])
+            self.salesman_gender_Entry.insert(0, self.setlist['3'])
+            self.salesman_age_Entry.insert(0, self.setlist['4'])
+            self.salesman_address_Entry.insert(0, self.setlist['5'])
 
-        #self.edit_entry_name.insert(0, self.setlist['2'])
-        #self.edit_entry_number.insert(0, self.setlist['1'])
-        #self.edit_entry_age.insert(0, self.setlist['4'])
-        #self.edit_entry_address.insert(0, self.setlist['5'])
+            #self.edit_entry_name.insert(0, self.setlist['2'])
+            #self.edit_entry_number.insert(0, self.setlist['1'])
+            #self.edit_entry_age.insert(0, self.setlist['4'])
+            #self.edit_entry_address.insert(0, self.setlist['5'])
 
-        self.salesman_number_Entry.config(state="disabled")
-        self.salesman_name_Entry.config(state="disabled")
-        self.salesman_gender_Entry.config(state="disabled")
-        self.salesman_age_Entry.config(state="disabled")
-        self.salesman_address_Entry.config(state="disabled")
+            self.salesman_number_Entry.config(state="disabled")
+            self.salesman_name_Entry.config(state="disabled")
+            self.salesman_gender_Entry.config(state="disabled")
+            self.salesman_age_Entry.config(state="disabled")
+            self.salesman_address_Entry.config(state="disabled")
 
-        self.sales_button.config(state="normal")
-
+            self.sales_button.config(state="normal")
+        except Exception as error:
+            messagebox.showerror(title="Coanime Co. | Failed", message="COanime Co. | Please Try Again")
     #display data
     def display_salesman_information(self, listbox):
         listbox.delete(*listbox.get_children())
@@ -442,22 +445,76 @@ class mainGUI(CTk):
 
 
     def display_sales_information(self, listbox):
-        listbox.delete(*listbox.get_chilren())
+        listbox.delete(*listbox.get_children())
         
         cursor = sqlite3.connect("SalesFile.db").cursor()
 
-        cursor.execute("SELECT * FROM salesman_name  WHERE salesman_name = ? ORDER BY salesman_name")
+        value = (self.SALESMAN_NAME.get(),)
+        cursor.execute("SELECT * FROM sales  WHERE salesman_name = ? ORDER BY salesman_name", value)
 
         self.row_sale = cursor.fetchall()
 
+        #self.image_path = []
         for row in self.row_sale:
-            listbox.insert('', 'end', values=(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]))
-    
+            listbox.insert('', 'end', values=(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], '****'))
+
+
 
     def show_value_sales(self, event):
-        pass
+        #global image_path
+        treeview = self.treeview_sales.focus()
+        content = (self.treeview_sales.item(treeview))
+        selecteditem = content['values']
+
+        self.sales = selecteditem[0]
+        #print(self.salesman_number)
+    
+        #image_path = self.setlist_sale['10']
+        row_id = self.treeview_sales.selection()[0]
+        self.setlist_sale = self.treeview_sales.set(row_id)
+
+        self.sales_name_Entry.config(state="normal")
+        self.sales_stock_Entry.config(state="normal")
+        self.sales_quantity_entry.config(state="normal")
+        self.sales_unit_entry.config(state="normal")
+        self.sales_unit_price_entry.config(state="normal")
+        self.sales_description_entry.config(state="normal")
+        self.sales_unit_amount_entry.config(state="normal")
+        self.sales_commission_entry.config(state="normal")
+        self.sales_net_amount_entry.config(state="normal")
+
+        self.sales_name_Entry.delete(0, END)
+        self.sales_stock_Entry.delete(0, END)
+        self.sales_quantity_entry.delete(0, END)
+        self.sales_unit_entry.delete(0, END)
+        self.sales_unit_price_entry.delete(0, END)
+        self.sales_description_entry.delete(0, END)
+        self.sales_unit_amount_entry.delete(0, END)
+        self.sales_commission_entry.delete(0, END)
+        self.sales_net_amount_entry.delete(0, END)
+
+        self.sales_name_Entry.insert(0, self.setlist_sale['1'])
+        self.sales_stock_Entry.insert(0, self.setlist_sale['2'])
+        self.sales_quantity_entry.insert(0, self.setlist_sale['3'])
+        self.sales_unit_entry.insert(0, self.setlist_sale['4'])
+        self.sales_description_entry.insert(0, self.setlist_sale['5'])
+        self.sales_unit_price_entry.insert(0, self.setlist_sale['6'])
+        self.sales_unit_amount_entry.insert(0, self.setlist_sale['7'])
+        self.sales_commission_entry.insert(0, self.setlist_sale['8'])
+        self.sales_net_amount_entry.insert(0, self.setlist_sale['9'])
+
+        self.sales_name_Entry.config(state="disabled")
+        self.sales_stock_Entry.config(state="disabled")
+        self.sales_quantity_entry.config(state="disabled")
+        self.sales_unit_entry.config(state="disabled")
+        self.sales_unit_price_entry.config(state="disabled")
+        self.sales_description_entry.config(state="disabled")
+        self.sales_unit_amount_entry.config(state="disabled")
+        self.sales_commission_entry.config(state="disabled")
+        self.sales_net_amount_entry.config(state="disabled")
 
     def sales_gui(self):
+
         window = Toplevel()
         window.geometry("1400x800")
         window.title(f"Coanime Co. | {self.setlist['2']} Sales Management Dashboard")
@@ -475,46 +532,51 @@ class mainGUI(CTk):
         company_label.place(x=200, y=25)
 
              #Frame for sidebar_information
-        side_information_frame = Frame(window, height=700, width=300)
-        side_information_frame.place(x=0.1, y=100)
+        self.side_information_frame = Frame(window, height=700, width=300)
+        self.side_information_frame.place(x=0.1, y=100)
         
         #for image or logo of the salesman
-        self.canvas = CTkCanvas(window, height=150, width=200, bg='blue')
-        self.canvas.place(x=40, y=100)
+        image_size = 50
+
+        image_resize = Image.open("assets/icon/store-alt.png").resize((100, 100), Image.ANTIALIAS)
+        canvas_image = ImageTk.PhotoImage(image_resize)
+
+        self.canvas = CTkLabel(self.side_information_frame, image=canvas_image,relief=GROOVE, borderwidth=0, bg="#243A73")
+        self.canvas.place(x=80, y=40)
+        #self.canvas.create_image(20, 20, image=add_photo)
 
 
-        self.salesman_number_entry2 = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NUMBER)
+        self.salesman_number_entry2 = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NUMBER)
         self.salesman_number_entry2.place(x=40, y=170)
 
-        self.salesman_name_entry2 = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NAME)
+        self.salesman_name_entry2 = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=self.SALESMAN_NAME)
         self.salesman_name_entry2.place(x=40, y=210)
 
-
-        self.sales_name_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_name_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_name_Entry.place(x=40, y=250)
 
-        self.sales_stock_Entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_stock_Entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_stock_Entry.place(x=40, y=290)
         
-        self.sales_quantity_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_quantity_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_quantity_entry.place(x=40, y=330)
 
-        self.sales_description_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
-        self.sales_description_entry.place(x=40, y=370)
+        self.sales_unit_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_unit_entry.place(x=40, y=370)
 
-        self.sales_unit_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
-        self.sales_unit_entry.place(x=40, y=410)
+        self.sales_description_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_description_entry.place(x=40, y=410)
 
-        self.sales_unit_price_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_unit_price_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_unit_price_entry.place(x=40, y=450)
 
-        self.sales_unit_amount_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_unit_amount_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_unit_amount_entry.place(x=40, y=490)
 
-        self.sales_commission_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_commission_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_commission_entry.place(x=40, y=530)
 
-        self.sales_net_amount_entry = CTkEntry(side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
+        self.sales_net_amount_entry = CTkEntry(self.side_information_frame, fg="#fcfcfc", bg=self.color, width=200, text_font="Gluten 20", state="disabled", textvariable=None)
         self.sales_net_amount_entry.place(x=40, y=570)
         
 
@@ -522,21 +584,21 @@ class mainGUI(CTk):
         treeview_information_frame = Frame(window, height=600, width=1100)
         treeview_information_frame.place(x=300, y=100)
 
-        self.treeview_column = ('1', '2', '3', '4', '5', '6', '7', '8', '9')
+        self.treeview_column = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
 
         self.treeview_sales = Treeview(treeview_information_frame, columns=self.treeview_column, show='headings', height=21)
 
-        self.treeview_sales.heading('1', text="Salesman Name")
+        self.treeview_sales.heading('1', text="Sales Name")
         self.treeview_sales.column("#1", width=120)
-        self.treeview_sales.heading('2', text="Salesman Stock")
+        self.treeview_sales.heading('2', text="Stock Number")
         self.treeview_sales.column("#2", width=120)
-        self.treeview_sales.heading('3', text="Salesman Quantity")
+        self.treeview_sales.heading('3', text="Sales Quantity")
         self.treeview_sales.column("#3", width=120)
-        self.treeview_sales.heading('4', text="Salesman Description")
+        self.treeview_sales.heading('4', text="Sales Unit")
         self.treeview_sales.column("#4", width=120)
-        self.treeview_sales.heading('5', text="Salesman Unit")
+        self.treeview_sales.heading('5', text="Sales Description")
         self.treeview_sales.column("#5", width=120)
-        self.treeview_sales.heading('6', text="Salesman Selling Price")
+        self.treeview_sales.heading('6', text="Sales Selling Price")
         self.treeview_sales.column("#6", width=120)
         self.treeview_sales.heading('7', text="Amount")
         self.treeview_sales.column("#7", width=120)
@@ -544,6 +606,8 @@ class mainGUI(CTk):
         self.treeview_sales.column("#8", width=120)
         self.treeview_sales.heading('9', text="Net Amount")
         self.treeview_sales.column("#9", width=120)
+        self.treeview_sales.heading('10')
+        self.treeview_sales.column("#10", width=1, stretch=NO)
 
         self.treeview_sales.grid()
         self.treeview_sales.bind("<Double-Button-1>", self.show_value_sales)
@@ -562,18 +626,220 @@ class mainGUI(CTk):
         sales_photo = ImageTk.PhotoImage(Image.open("assets/icon/shop.png").resize((image_size, image_size)))
 
 
-        add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=self.create_salesman, fg_color="#4B8673", hover_color="#5FD068")
+        add_button = CTkButton(button_information_frame, width=200, height=60, text="Add", image=add_photo, compound="left", command=self.create_sales, fg_color="#4B8673", hover_color="#5FD068")
         add_button.place(x=50, y=30)
 
-        edit_button = CTkButton(button_information_frame, width=200, height=60, text="Edit", image=edit_photo, compound="left", command=self.edit_information, fg_color="#47B5FF", hover_color="#1363DF")
+        edit_button = CTkButton(button_information_frame, width=200, height=60, text="Edit", image=edit_photo, compound="left", command=self.edit_sales, fg_color="#47B5FF", hover_color="#1363DF")
         edit_button.place(x=300, y=30)
 
-        delete_button = CTkButton(button_information_frame, width=200, height=60, text="Delete", image=delete_photo, compound="left", command=self.delete_information, fg_color="#D82148", hover_color="#FF1818")
+        delete_button = CTkButton(button_information_frame, width=200, height=60, text="Delete", image=delete_photo, compound="left", command=self.edit_sales, fg_color="#D82148", hover_color="#FF1818")
         delete_button.place(x=550, y=30)
 
-
+        self.display_sales_information(self.treeview_sales)
         
         window.mainloop()
 
+    #=============CRUD FUNCTION STARTS HERE=============#
+
+    def create_sales(self):
+        create_window = CTkToplevel()
+        create_window.title("Canime Co. | Create Sale Product")
+        create_window.geometry("550x600")
+        
+        #VARIABLE FOR CREATING SALES
+        self.ITEM_IMAGE_PATH = StringVar()
+        self.SALES_NAME = StringVar()
+        self.STOCK_NO = IntVar()
+        self.QUANTITY = IntVar()
+        self.UNIT = StringVar()
+        self.SELLING_PRICE = IntVar()
+        self.AMOUNT = IntVar()
+        self.COMMISSION = IntVar()
+        self.NET_AMOUNT = IntVar()
+
+        self.create_sale_frame = CTkFrame(create_window, height=500, width=420, fg_color="#413F42")
+        self.create_sale_frame.place(x=60, y=0.1)
+
+        create_sale_label = CTkLabel(self.create_sale_frame, text="Create Sale Product", text_font=("Gluten 20"))
+        create_sale_label.place(x=20, y=10)
+
+        salesman_name_label = CTkLabel(self.create_sale_frame, text="Salesman Name: ", text_font=("Roboto 15"))
+        salesman_name_label.place(x=10, y=50)
+
+        self.salesman_name_sales_entry = CTkEntry(self.create_sale_frame, width=150, text=self.SALESMAN_NAME, state="disabled")
+        self.salesman_name_sales_entry.place(x=150, y=50)
+
+        sales_name_product_label = CTkLabel(self.create_sale_frame, text="Sales Name: ", text_font=("Roboto 15"))
+        sales_name_product_label.place(x=10, y=90)
+        
+        self.sales_name_product_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_name_product_entry.place(x=150, y=90)
+
+        sales_stock_no_label = CTkLabel(self.create_sale_frame, text="Sales Stock: ", text_font=("Roboto 15"))
+        sales_stock_no_label.place(x=10, y=130)
+
+        self.sales_stock_no_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_stock_no_entry.place(x=150, y=130)
+
+        sales_quantity_label = CTkLabel(self.create_sale_frame, text="Sales Quantity: ", text_font=("Roboto 15"))
+        sales_quantity_label.place(x=10, y=170)
+
+        self.sales_quantity_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_quantity_entry.place(x=150, y=170)
+
+        sales_description_label = CTkLabel(self.create_sale_frame, text="Sales Description: ", text_font=("Roboto 15"))
+        sales_description_label.place(x=10, y=210)
+        
+        self.sales_description_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_description_entry.place(x=150, y=210)
+
+        sales_unit_label = CTkLabel(self.create_sale_frame, text="Sales Unit: ", text_font=("Roboto 15"))
+        sales_unit_label.place(x=10, y=250)
+
+        self.sales_unit_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_unit_entry.place(x=150, y=250)
+
+        sales_selling_price_label = CTkLabel(self.create_sale_frame, text="Sales Price: ", text_font=("Roboto 15"))
+        sales_selling_price_label.place(x=10, y=290)
+
+        self.sales_selling_price_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_selling_price_entry.place(x=150, y=290)
+
+        self.sales_amount_label = CTkLabel(self.create_sale_frame, text="Sales Amount: ", text_font=("Roboto 15"))
+        self.sales_amount_label.place(x=10, y=330)
+
+        self.sales_commission_label = CTkLabel(self.create_sale_frame, text="Sales Commission: ", text_font=("Roboto 15"))
+        self.sales_commission_label.place(x=10, y=370)
+
+        self.sales_net_amount_label = CTkLabel(self.create_sale_frame, text="Sales Net Amount: ", text_font=("Roboto 15"))
+        self.sales_net_amount_label.place(x=10, y=410)
+
+        self.image_for_product_label = CTkLabel(self.create_sale_frame, text="Image: ", text_font=("Roboto 15"))
+        self.image_for_product_label.place(x=10, y=450)
+
+        #image for button  
+        image_size = 20
+        image_download = ImageTk.PhotoImage(Image.open("assets/icon/picture.png").resize((image_size, image_size)))
+        add_png = ImageTk.PhotoImage(Image.open("assets/icon/shop_add.png").resize((image_size, image_size)))
+        ban_png = ImageTk.PhotoImage(Image.open("assets/icon/ban.png").resize((image_size, image_size)))
+
+        self.image_for_product_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.image_for_product_entry.place(x=150, y=450)
+
+        self.image_for_product_button = CTkButton(self.create_sale_frame, image=image_download, width=1, text="choose", text_font=("Gluten 15"), fg_color="#363062", hover_color="#4D4C7D")
+        self.image_for_product_button.place(x=300, y=450)
+
+
+        #FRAME FOR BUTTONS
+        button_frame = CTkFrame(create_window, width=400, height=50, fg_color="#7F8487")
+        button_frame.place(x=70, y=520)
+
+        self.create_sale_button = CTkButton(button_frame, width=100, height=45, image=add_png, text="Create", text_font=("Gluten 15"), fg_color="#4E944F", hover_color="#83BD75", command=None)
+        self.create_sale_button.place(x=60, y=1)
+
+        self.cancel_sale_button = CTkButton(button_frame, width=100, height=45, image=ban_png, text="Cancel", text_font=("Gluten 15"), fg_color="#FD5D5D", hover_color="#FF8080", command=create_window.destroy)
+        self.cancel_sale_button.place(x=230, y=1)
+
+
+    def edit_sales(self):
+        edit_window = CTkToplevel()
+        edit_window.title("Canime Co. | Edit Salesman Information")
+        edit_window.geometry("550x600")
+        
+        #VARIABLE FOR CREATING SALES
+        self.ITEM_IMAGE_PATH = StringVar()
+        self.SALES_NAME = StringVar()
+        self.STOCK_NO = IntVar()
+        self.QUANTITY = IntVar()
+        self.UNIT = StringVar()
+        self.SELLING_PRICE = IntVar()
+        self.AMOUNT = IntVar()
+        self.COMMISSION = IntVar()
+        self.NET_AMOUNT = IntVar()
+
+        self.create_sale_frame = CTkFrame(edit_window, height=500, width=420, fg_color="#413F42")
+        self.create_sale_frame.place(x=60, y=0.1)
+
+        create_sale_label = CTkLabel(self.create_sale_frame, text="Create Sale Product", text_font=("Gluten 20"))
+        create_sale_label.place(x=20, y=10)
+
+        salesman_name_label = CTkLabel(self.create_sale_frame, text="Salesman Name: ", text_font=("Roboto 15"))
+        salesman_name_label.place(x=10, y=50)
+
+        self.salesman_name_sales_entry = CTkEntry(self.create_sale_frame, width=150, text=self.SALESMAN_NAME, state="disabled")
+        self.salesman_name_sales_entry.place(x=150, y=50)
+
+        sales_name_product_label = CTkLabel(self.create_sale_frame, text="Sales Name: ", text_font=("Roboto 15"))
+        sales_name_product_label.place(x=10, y=90)
+        
+        self.sales_name_product_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_name_product_entry.place(x=150, y=90)
+
+        sales_stock_no_label = CTkLabel(self.create_sale_frame, text="Sales Stock: ", text_font=("Roboto 15"))
+        sales_stock_no_label.place(x=10, y=130)
+
+        self.sales_stock_no_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_stock_no_entry.place(x=150, y=130)
+
+        sales_quantity_label = CTkLabel(self.create_sale_frame, text="Sales Quantity: ", text_font=("Roboto 15"))
+        sales_quantity_label.place(x=10, y=170)
+
+        self.sales_quantity_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_quantity_entry.place(x=150, y=170)
+
+        sales_description_label = CTkLabel(self.create_sale_frame, text="Sales Description: ", text_font=("Roboto 15"))
+        sales_description_label.place(x=10, y=210)
+        
+        self.sales_description_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_description_entry.place(x=150, y=210)
+
+        sales_unit_label = CTkLabel(self.create_sale_frame, text="Sales Unit: ", text_font=("Roboto 15"))
+        sales_unit_label.place(x=10, y=250)
+
+        self.sales_unit_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_unit_entry.place(x=150, y=250)
+
+        sales_selling_price_label = CTkLabel(self.create_sale_frame, text="Sales Price: ", text_font=("Roboto 15"))
+        sales_selling_price_label.place(x=10, y=290)
+
+        self.sales_selling_price_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.sales_selling_price_entry.place(x=150, y=290)
+
+        self.sales_amount_label = CTkLabel(self.create_sale_frame, text="Sales Amount: ", text_font=("Roboto 15"))
+        self.sales_amount_label.place(x=10, y=330)
+
+        self.sales_commission_label = CTkLabel(self.create_sale_frame, text="Sales Commission: ", text_font=("Roboto 15"))
+        self.sales_commission_label.place(x=10, y=370)
+
+        self.sales_net_amount_label = CTkLabel(self.create_sale_frame, text="Sales Net Amount: ", text_font=("Roboto 15"))
+        self.sales_net_amount_label.place(x=10, y=410)
+
+        self.image_for_product_label = CTkLabel(self.create_sale_frame, text="Image: ", text_font=("Roboto 15"))
+        self.image_for_product_label.place(x=10, y=450)
+
+        #image for button  
+        image_size = 20
+        image_download = ImageTk.PhotoImage(Image.open("assets/icon/picture.png").resize((image_size, image_size)))
+        add_png = ImageTk.PhotoImage(Image.open("assets/icon/shop_add.png").resize((image_size, image_size)))
+        ban_png = ImageTk.PhotoImage(Image.open("assets/icon/ban.png").resize((image_size, image_size)))
+
+        self.image_for_product_entry = CTkEntry(self.create_sale_frame, width=150)
+        self.image_for_product_entry.place(x=150, y=450)
+
+        self.image_for_product_button = CTkButton(self.create_sale_frame, image=image_download, width=1, text="choose", text_font=("Gluten 15"), fg_color="#363062", hover_color="#4D4C7D")
+        self.image_for_product_button.place(x=300, y=450)
+
+
+        #FRAME FOR BUTTONS
+        button_frame = CTkFrame(edit_window, width=400, height=50, fg_color="#7F8487")
+        button_frame.place(x=70, y=520)
+
+        self.edit_sale_button = CTkButton(button_frame, width=100, height=45, image=add_png, text="Submit", text_font=("Gluten 15"), fg_color="#79DAE8", hover_color="#0AA1DD")
+        self.edit_sale_button.place(x=60, y=1)
+
+        self.cancel_sale_button = CTkButton(button_frame, width=100, height=45, image=ban_png, text="Cancel", text_font=("Gluten 15"), fg_color="#FD5D5D", hover_color="#FF8080", command=edit_window.destroy)
+        self.cancel_sale_button.place(x=230, y=1)
+
 app = mainGUI()
 app.mainloop()
+
