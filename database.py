@@ -24,7 +24,7 @@ def sales():
     conn = sqlite3.connect('SalesFile.db')
 
     conn.execute('''
-        CREATE TABLE sales (salesman_name TEXT,
+        CREATE TABLE sales (salesman_number TEXT,
                             sales_name TEXT,
                             sales_stock INT,
                             sales_quantity INT,

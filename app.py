@@ -31,14 +31,21 @@ class System:
         
         #self.database.close()
     @staticmethod
-    def delete_salesman(salesman):
+    def delete_salesman(salesman, salesman_name):
 
         database = sqlite3.connect("SalesFile.db")
 
-        sql = "DELETE from salesman where salesman_number = ?"
+        sql = "DELETE from salesman where salesman_number = ? and salesman_name = ?"
+
+        value = (salesman, salesman_name,)
+
+        database.execute(sql, value)
+
+        database.commit()
+
+        sql = "DELETE FROM sales WHERE salesman_number = ?"
 
         value = (salesman,)
-
         database.execute(sql, value)
 
         database.commit()
@@ -58,9 +65,9 @@ class System:
         return rows
     
     def update_salesman(self):
-        #self.new_name = new_name
-        #sql2 = """UPDATE sales SET salesman_name = ? where salesman_name = ?"""
-        #value2 = (self.new_name, self.salesman_name,)
+        #ql2 = """UPDATE sales SET salesman_number = ? where salesman_number = ?"""
+
+        #value2 = (number,)
 
         #self.database.execute(sql2, value2)       
         
@@ -92,12 +99,12 @@ class Sales_system(System):
         self.sales_description = sales_description
         self.sales_price = sales_price
         self.sales_amount = sales_amount
-        self.sales_commission = sales_commission
+        self.sales_commission = sales_commission    
         self.sales_net_amount = sales_net_amount
 
     def create_sales(self):
         sql = """
-            INSERT INTO sales (salesman_name, sales_name, sales_stock, sales_quantity, sales_unit, sales_description, sales_price, sales_amount, sales_commission, sales_net_amount)
+            INSERT INTO sales (salesman_number, sales_name, sales_stock, sales_quantity, sales_unit, sales_description, sales_price, sales_amount, sales_commission, sales_net_amount)
                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
@@ -122,14 +129,14 @@ class Sales_system(System):
         cursor.execute(sql, value)
 
         self.database.commit()
+    
+    @staticmethod
+    def delete_sales(sales_name, sales_stock_no, salesman_name):
+        conn = sqlite3.connect("SalesFile.db")
 
-    def delete_sales(self):
-        sql = "DELETE from sales where sales_name = ?"
+        sql = "DELETE from sales where sales_name = ? AND sales_stock = ? AND salesman_name = ?"
 
-        value = (self.sales_product_name,)
+        value = (sales_name, sales_stock_no, salesman_name, )
 
-        cursor = self.database.cursor()
-
-        cursor.execute(sql, value)
-
-        self.database.commit()
+        conn.execute(sql, value)
+        conn.commit()
