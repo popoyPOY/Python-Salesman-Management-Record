@@ -97,11 +97,11 @@ class Sales_system(System):
 
     def create_sales(self):
         sql = """
-            INSERT INTO sales (salesman_name, sales_name, sales_stock, sales_quantity, sales_description, sales_price, sales_amount, sales_commission, sales_net_amount)
-                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO sales (salesman_name, sales_name, sales_stock, sales_quantity, sales_unit, sales_description, sales_price, sales_amount, sales_commission, sales_net_amount)
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
-        value = (self.salesman_name, self.sales_product_name, self.sales_stock, self.sales_quantity, self.sales_description, self.sales_price, self.sales_amount,
+        value = (self.salesman_name, self.sales_product_name, self.sales_stock, self.sales_quantity, self.sales_unit, self.sales_description, self.sales_price, self.sales_amount,
                  self.sales_commission, self.sales_net_amount)
 
         cursor = self.database.cursor()
@@ -109,7 +109,7 @@ class Sales_system(System):
         cursor.execute(sql,value)
 
         self.database.commit()
-
+        return True
     def update_sales(self):
         sql = """UPDATE sales SET salesman_name = ?, sales_stock = ?, sales_quantity = ?, sales_description = ?, sales_price = ?,
                                   sales_amount = ?, sales_commission = ? , sales_net_amount = ? where sales_name = ?"""
