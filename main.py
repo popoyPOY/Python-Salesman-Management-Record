@@ -1,12 +1,8 @@
-from calendar import c
-from email import message
 import sqlite3
 from tkinter import font, messagebox
 from tkinter import *
 from tkinter.ttk import Treeview
 import tkinter.ttk as ttk
-from tokenize import String
-from turtle import bgcolor
 from PIL import ImageTk, Image
 import customtkinter
 from customtkinter import *
@@ -83,8 +79,20 @@ class mainGUI(CTk):
             messagebox.showerror(title="Canime Co. | Message",
                                  message="Canime Co. | No credentials provided!")
         else:
-            messagebox.showerror(title="Canime Co. | Message",
-                                 message="Canime Co. | Login Failed, invalid username or password")
+            conn = sqlite3.connect("SalesFile.db").cursor()
+
+            sql = "SELECT * from users WHERE username = ? AND password = ?"
+            value = (self.username_entry.get(), self.password_entry.get(),)
+            conn.execute(sql, value)
+
+            if conn.fetchone():
+                messagebox.showinfo(title="Canime Co. | Message",
+                                message="Canime Co. | Login Successful")
+                self.withdraw()
+                self.salesman_gui()
+            else:
+                messagebox.showerror(title="Canime Co. | Message",
+                                 message="Canime Co. | Invalid Username or Password")
 
     def salesman_gui(self):
         window = CTkToplevel()
@@ -719,12 +727,14 @@ class mainGUI(CTk):
         window.mainloop()
 
 
+
     def search_sale(self, event):
         try:
 
             conn = sqlite3.connect("SalesFile.db").cursor()
 
-            conn.execute("SELECT * FROM sales WHERE sales_name LIKE '%"+ self.SEARCH_SALE.get()+"%'")
+            value = (self.SALESMAN_NUMBER.get(),)
+            conn.execute("SELECT * FROM sales WHERE salesman_number = ? AND sales_name LIKE '%"+ self.SEARCH_SALE.get()+"%'",value)
 
             row = conn.fetchall()
 

@@ -17,7 +17,7 @@ def salesman():
     conn.commit()
     conn.close()
 
-salesman()
+#salesman()
 
 def sales():
     
@@ -39,4 +39,13 @@ def sales():
     conn.commit()
     conn.close()
 
-sales()
+#sales()
+
+
+def register():
+    conn = sqlite3.connect('SalesFile.db')
+    conn.execute("CREATE TABLE users (username TEXT, PASSWORD, TEXT)")
+    conn.commit()
+    conn.close()
+
+#
